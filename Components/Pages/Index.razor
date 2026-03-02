@@ -1,0 +1,38 @@
+﻿@page "/NavesEspaciales/Index"
+@rendermode InteractiveServer
+@inject NavesEspacialesService navesService
+@inject ToastService ToastService
+
+<PageTitle>Naves Espaciales</PageTitle>
+
+<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="4000" />
+
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Registro Naves Espaciales</h5>
+            <a href="/NavesEspaciales/Create" class="btn btn-primary">
+                <span class="bi bi-plus-square"></span> Crear
+            </a>
+        </div>
+
+        <div class="card-body">
+        </div>
+
+        <div class="card-footer d-flex justify-content-between align-items-center">
+        </div>
+    </div>
+</div>
+
+@code {
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
+    private void ShowToast(ToastType toastType, string message)
+    {
+        messages.Add(new ToastMessage { Type = toastType, Title = "Notificación", Message = message });
+    }
+}
