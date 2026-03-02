@@ -1,10 +1,18 @@
 using Hamlet_GarciaAP1_P2.Components;
+using Hamlet_GarciaAP1_P2.DAL; // Importar DAL
+using Hamlet_GarciaAP1_P2.Services; // Importar Servicios
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBlazorBootstrap();
+var ConStr = builder.Configuration.GetConnectionString("SqlConStr");
 
+builder.Services.AddDbContextFactory<Contexto>(options =>
+    options.UseSqlServer(ConStr));
+
+builder.Services.AddScoped<NavesEspacialesService>();
+
+builder.Services.AddBlazorBootstrap();
 // Add services to the container.
 builder.Services.AddRazorComponents()
        .AddInteractiveServerComponents();
@@ -20,7 +28,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
 
