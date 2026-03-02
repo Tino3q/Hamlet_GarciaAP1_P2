@@ -3,7 +3,7 @@
 namespace Hamlet_GarciaAP1_P2.Extensors;
      public static class ToastServiceExtensions
     {
-        // Generalized method to show any type of toast
+        // Generalized method to show any Type of toast
         public static ToastMessage ShowToast(this ToastService toastService, ToastType toastType, string title, string customMessage = null)
         {
             var message = new ToastMessage()
