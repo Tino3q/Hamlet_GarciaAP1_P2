@@ -1,0 +1,42 @@
+﻿@page "/NavesEspaciales/Create"
+@rendermode InteractiveServer
+
+<PageTitle>Crear Nave</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">Nueva Nave Espacial</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nombre de la Nave</label>
+                    <input type="text" class="form-control" placeholder="Ej. Enterprise" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Modelo</label>
+                    <input type="text" class="form-control" placeholder="Ej. NCC-1701" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Descripción</label>
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer text-end">
+            <a href="/NavesEspaciales/Index" class="btn btn-secondary">
+                <span class="bi bi-arrow-left"></span> Volver
+            </a>
+            <button type="submit" class="btn btn-success">
+                <span class="bi bi-floppy"></span> Guardar
+            </button>
+        </div>
+    </div>
+</div>
