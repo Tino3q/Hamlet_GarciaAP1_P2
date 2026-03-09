@@ -1,7 +1,20 @@
 ﻿@page "/"
+@inject ToastService toastService
 
 <PageTitle>Hamlet_GarciaAP1_P2</PageTitle>
 
-<h1>Hamlet Garcia  <b>2022_0332</b></h1>
+<h1>
+    Hamlet Garcia <b>2022_0332</b>
+    <button class="btn btn-primary btn-sm ms-2" @onclick="Mensaje">
+        Mensaje
+    </button>
+</h1>
 
 Segundo Parcial programaci&oacuten Aplicada;
+
+@code {
+    private void Mensaje()
+    {
+        toastService.Notify(new(ToastType.Success, "Prueba", "El Toast funciona correctamente."));
+    }
+}

@@ -1,6 +1,6 @@
 using Hamlet_GarciaAP1_P2.Components;
-using Hamlet_GarciaAP1_P2.DAL; // Importar DAL
-using Hamlet_GarciaAP1_P2.Services; // Importar Servicios
+using Hamlet_GarciaAP1_P2.DAL;
+using Hamlet_GarciaAP1_P2.Services; 
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

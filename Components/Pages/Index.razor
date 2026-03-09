@@ -1,38 +1,95 @@
 ﻿@page "/NavesEspaciales/Index"
 @rendermode InteractiveServer
 @inject NavesEspacialesService navesService
-@inject ToastService ToastService
+@inject ToastService toastService
 
-<PageTitle>Naves Espaciales</PageTitle>
-
-<Toasts class="p-3" Messages="messages" AutoHide="true" Delay="4000" />
+<PageTitle>Listado de Naves</PageTitle>
 
 <div class="container">
-    <div class="card shadow-lg">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title">Registro Naves Espaciales</h5>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h3>Listado de Naves Espaciales</h3>
             <a href="/NavesEspaciales/Create" class="btn btn-primary">
-                <span class="bi bi-plus-square"></span> Crear
+                Nueva Nave
             </a>
         </div>
 
         <div class="card-body">
-        </div>
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Desde:</label>
+                    <input type="date" class="form-control" @bind="FechaDesde" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Hasta:</label>
+                    <input type="date" class="form-control" @bind="FechaHasta" />
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button class="btn btn-secondary me-2" @onclick="Buscar">
+                        Buscar
+                    </button>
+                    <button class="btn btn-dark" @onclick="Restablecer">
+                        Restablecer
+                    </button>
+                </div>
+            </div>
 
-        <div class="card-footer d-flex justify-content-between align-items-center">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Nombre</th>
+                        <th>Modelo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var nave in naves)
+                    {
+                        <tr>
+                            <td>@nave.NaveId</td>
+                            <td>@nave.FechaCreacion.ToShortDateString()</td>
+                            <td>@nave.Nombre</td>
+                            <td>@nave.Modelo</td>
+                            <td>
+                                <a href="/NavesEspaciales/Edit/@nave.NaveId" class="btn btn-primary btn-sm">
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 @code {
-    List<ToastMessage> messages = new List<ToastMessage>();
+    public List<NavesEspaciales> naves = new();
+    public DateTime? FechaDesde { get; set; }
+    public DateTime? FechaHasta { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        await Buscar();
     }
 
-    private void ShowToast(ToastType toastType, string message)
+    private async Task Buscar()
     {
-        messages.Add(new ToastMessage { Type = toastType, Title = "Notificación", Message = message });
+        naves = await navesService.Listar(n =>
+            (!FechaDesde.HasValue || n.FechaCreacion >= FechaDesde.Value) &&
+            (!FechaHasta.HasValue || n.FechaCreacion <= FechaHasta.Value)
+        );
+
+        if (naves.Count == 0)
+            toastService.Notify(new(ToastType.Info, "Información", "No se encontraron naves."));
+    }
+
+    private async Task Restablecer()
+    {
+        FechaDesde = null;
+        FechaHasta = null;
+        await Buscar();
     }
 }

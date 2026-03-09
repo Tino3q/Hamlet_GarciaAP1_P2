@@ -1,0 +1,80 @@
+﻿@page "/NavesEspaciales/Edit/{NaveId:int}"
+@rendermode InteractiveServer
+@inject NavesEspacialesService navesService
+@inject NavigationManager navManager
+@inject ToastService toastService
+
+<PageTitle>Editar Nave</PageTitle>
+
+<EditForm Model="nave" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h3>Editar Nave Espacial</h3>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label">ID</label>
+                        <InputNumber @bind-Value="nave.NaveId" class="form-control" readonly />
+                    </div>
+
+                    <div class="col-md-10 mb-3">
+                        <label class="form-label">Nombre</label>
+                        <InputText @bind-Value="nave.Nombre" class="form-control" />
+                        <ValidationMessage For="@(() => nave.Nombre)" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Modelo</label>
+                    <InputText @bind-Value="nave.Modelo" class="form-control" />
+                    <ValidationMessage For="@(() => nave.Modelo)" />
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button type="button" class="btn btn-danger" @onclick="Eliminar">
+                    Eliminar
+                </button>
+                <div class="float-end">
+                    <a href="/NavesEspaciales/Index" class="btn btn-secondary">Volver</a>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter] public int NaveId { get; set; }
+    public NavesEspaciales nave = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var encontrada = await navesService.Buscar(NaveId);
+        if (encontrada != null)
+            nave = encontrada;
+    }
+
+    private async Task Guardar()
+    {
+        if (await navesService.Guardar(nave))
+        {
+            toastService.Notify(new(ToastType.Success, "Actualizado", "Nave modificada con éxito."));
+            navManager.NavigateTo("/NavesEspaciales/Index");
+        }
+    }
+
+    private async Task Eliminar()
+    {
+        if (await navesService.Eliminar(nave.NaveId))
+        {
+            toastService.Notify(new(ToastType.Danger, "Eliminado", "La nave ha sido removida."));
+            navManager.NavigateTo("/NavesEspaciales/Index");
+        }
+    }
+}
