@@ -1,0 +1,51 @@
+﻿@page "/Estudiantes/Index"
+@rendermode InteractiveServer
+@inject AsignacionesService asignacionesService
+@inject ToastService toastService
+
+<PageTitle>Listado de Estudiantes</PageTitle>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h3>Estudiantes registrados</h3>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Estudiante Id</th>
+                        <th>Nombres</th>
+                        <th>Email</th>
+                        <th>Edad</th>
+                        <th>Balance Puntos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var estudiante in estudiantes)
+                    {
+                        <tr>
+                            <td>@estudiante.EstudianteId</td>
+                            <td>@estudiante.Nombres</td>
+                            <td>@estudiante.Email</td>
+                            <td>@estudiante.Edad</td>
+                            <td>@estudiante.BalancePuntos</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <p><strong>Cantidad:</strong> @estudiantes.Count</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<Estudiantes> estudiantes = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        estudiantes = await asignacionesService.ListarEstudiantes();
+    }
+}

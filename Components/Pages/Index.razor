@@ -1,21 +1,31 @@
-﻿@page "/NavesEspaciales/Index"
+﻿@page "/Asignaciones/Index"
 @rendermode InteractiveServer
-@inject NavesEspacialesService navesService
+@inject AsignacionesService asignacionesService
 @inject ToastService toastService
 
-<PageTitle>Listado de Naves</PageTitle>
+<PageTitle>Listado de Asignaciones</PageTitle>
 
 <div class="container">
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h3>Listado de Naves Espaciales</h3>
-            <a href="/NavesEspaciales/Create" class="btn btn-primary">
-                Nueva Nave
+            <h3>Listado de Asignaciones de Puntos</h3>
+            <a href="/Asignaciones/Create" class="btn btn-primary">
+                Nueva Asignación
             </a>
         </div>
 
         <div class="card-body">
             <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Estudiante:</label>
+                    <select class="form-select" @bind="EstudianteFiltro">
+                        <option value="0"> Filtrar Todo </option>
+                        @foreach (var e in estudiantes)
+                        {
+                            <option value="@e.EstudianteId">@e.Nombres</option>
+                        }
+                    </select>
+                </div>
                 <div class="col-md-3">
                     <label class="form-label">Desde:</label>
                     <input type="date" class="form-control" @bind="FechaDesde" />
@@ -24,7 +34,7 @@
                     <label class="form-label">Hasta:</label>
                     <input type="date" class="form-control" @bind="FechaHasta" />
                 </div>
-                <div class="col-md-4 d-flex align-items-end">
+                <div class="col-md-3 d-flex align-items-end">
                     <button class="btn btn-secondary me-2" @onclick="Buscar">
                         Buscar
                     </button>
@@ -39,55 +49,66 @@
                     <tr>
                         <th>ID</th>
                         <th>Fecha</th>
-                        <th>Nombre</th>
-                        <th>Modelo</th>
+                        <th>Estudiante</th>
+                        <th>Total Puntos</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var nave in naves)
+                    @foreach (var asignacion in asignaciones)
                     {
                         <tr>
-                            <td>@nave.NaveId</td>
-                            <td>@nave.FechaCreacion.ToShortDateString()</td>
-                            <td>@nave.Nombre</td>
-                            <td>@nave.Modelo</td>
+                            <td>@asignacion.IdAsignacion</td>
+                            <td>@asignacion.Fecha.ToShortDateString()</td>
+                            <td>@asignacion.Estudiante?.Nombres</td>
+                            <td>@asignacion.TotalPuntos</td>
                             <td>
-                                <a href="/NavesEspaciales/Edit/@nave.NaveId" class="btn btn-primary btn-sm">
+                                <a href="/Asignaciones/Edit/@asignacion.IdAsignacion" class="btn btn-primary btn-sm">
                                     Editar
                                 </a>
                             </td>
                         </tr>
                     }
                 </tbody>
+                <tfoot>
+                    <tr class="table-secondary fw-bold">
+                        <td colspan="3">Total de registros: @asignaciones.Count</td>
+                        <td colspan="2">Total de puntos: @asignaciones.Sum(a => a.TotalPuntos)</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
 </div>
 
 @code {
-    public List<NavesEspaciales> naves = new();
+    public List<AsignacionesPuntos> asignaciones = new();
+    public List<Estudiantes> estudiantes = new();
+    public int EstudianteFiltro { get; set; } = 0;
     public DateTime? FechaDesde { get; set; }
     public DateTime? FechaHasta { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        estudiantes = await asignacionesService.ListarEstudiantes();
         await Buscar();
     }
 
     private async Task Buscar()
     {
-        naves = await navesService.Listar(n =>
-            (!FechaDesde.HasValue || n.FechaCreacion >= FechaDesde.Value) &&
-            (!FechaHasta.HasValue || n.FechaCreacion <= FechaHasta.Value)
+        asignaciones = await asignacionesService.Listar(a =>
+            (EstudianteFiltro == 0 || a.EstudianteId == EstudianteFiltro) &&
+            (!FechaDesde.HasValue || a.Fecha >= FechaDesde.Value) &&
+            (!FechaHasta.HasValue || a.Fecha <= FechaHasta.Value)
         );
 
-        if (naves.Count == 0)
-            toastService.Notify(new(ToastType.Info, "Información", "No se encontraron naves."));
+        if (asignaciones.Count == 0)
+            toastService.Notify(new(ToastType.Info, "Informacion", "No se encontraron asignaciones."));
     }
 
     private async Task Restablecer()
     {
+        EstudianteFiltro = 0;
         FechaDesde = null;
         FechaHasta = null;
         await Buscar();

@@ -4,6 +4,7 @@ using Hamlet_GarciaAP1_P2.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hamlet_GarciaAP1_P2.Migrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20260309233009_inicia1")]
+    partial class inicia1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,9 +106,9 @@ namespace Hamlet_GarciaAP1_P2.Migrations
                         {
                             EstudianteId = 1,
                             BalancePuntos = 0,
-                            Edad = 21,
-                            Email = "Jose_garcia30@ucne.edu.do",
-                            Nombres = "Jose Hamlet Garcia"
+                            Edad = 20,
+                            Email = "ana@universidad.edu",
+                            Nombres = "Ana Martínez"
                         },
                         new
                         {
@@ -167,7 +170,7 @@ namespace Hamlet_GarciaAP1_P2.Migrations
                             Color = "primary",
                             Descripcion = "Participación en clase",
                             Icono = "bi-hand-thumbs-up",
-                            Nombre = "Participacion",
+                            Nombre = "Participación",
                             ValorPuntos = 5
                         },
                         new

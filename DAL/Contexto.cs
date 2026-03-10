@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Hamlet_GarciaAP1_P2.Models; 
+using Hamlet_GarciaAP1_P2.Models;
 
 namespace Hamlet_GarciaAP1_P2.DAL;
 
@@ -7,5 +7,25 @@ public class Contexto : DbContext
 {
     public Contexto(DbContextOptions<Contexto> options) : base(options) { }
 
-    public DbSet<NavesEspaciales> NavesEspaciales { get; set; }
+    public DbSet<AsignacionesPuntos> AsignacionesPuntos { get; set; }
+    public DbSet<DetalleAsignacion> DetalleAsignacion { get; set; }
+    public DbSet<Estudiantes> Estudiantes { get; set; }
+    public DbSet<TiposPuntos> TiposPuntos { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Estudiantes>().HasData(
+            new Estudiantes { EstudianteId = 1, Nombres = "Jose Hamlet Garcia", Email = "Jose_garcia30@ucne.edu.do", Edad = 21, BalancePuntos = 0 },
+            new Estudiantes { EstudianteId = 2, Nombres = "Carlos Pérez", Email = "carlos@universidad.edu", Edad = 22, BalancePuntos = 0 },
+            new Estudiantes { EstudianteId = 3, Nombres = "Laura Rodríguez", Email = "laura@universidad.edu", Edad = 21, BalancePuntos = 0 }
+        );
+
+        modelBuilder.Entity<TiposPuntos>().HasData(
+            new TiposPuntos { TipoId = 1, Nombre = "Participacion", Descripcion = "Participación en clase", ValorPuntos = 5, Color = "primary", Icono = "bi-hand-thumbs-up", Activo = true },
+            new TiposPuntos { TipoId = 2, Nombre = "Tarea Entregada", Descripcion = "Entrega de tarea", ValorPuntos = 10, Color = "success", Icono = "bi-journal-check", Activo = true },
+            new TiposPuntos { TipoId = 3, Nombre = "Proyecto", Descripcion = "Entrega de proyecto", ValorPuntos = 20, Color = "warning", Icono = "bi-lightbulb", Activo = true }
+        );
+    }
 }
